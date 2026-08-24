@@ -1,4 +1,5 @@
 package com.sistema.bitacora.dto.caso;
 
-public class DashboardService {
+public interface DashboardService {
+    DashboardResponse obtenerEstadisticas();
 }

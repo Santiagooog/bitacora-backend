@@ -19,6 +19,14 @@ public class Caso {
     private Long id;
 
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creado_por_id")
+    private Usuario creadoPor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "actualizado_por_id")
+    private Usuario actualizadoPor;
+
     @Column(nullable = false)
     private LocalDateTime fechaSolicitud;
 
