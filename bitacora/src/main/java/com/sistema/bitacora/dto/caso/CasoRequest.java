@@ -1,41 +1,41 @@
 package com.sistema.bitacora.dto.caso;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CasoRequest {
-
-    @NotNull
     private LocalDateTime fechaSolicitud;
-
-    @NotNull
     private Long servicioId;
-
-    @NotNull
     private Long tipoServicioId;
-
-    @NotBlank
     private String numeroCasoInt;
-
     private String numeroCasoESolution;
-
-    @NotNull
     private Long estadoId;
-
-    @NotNull
     private Long sedeId;
-
-    @NotBlank
     private String descripcionFalla;
-
     private Long responsableId;
     private Long agenteRecibeId;
     private Long agenteResolutorId;
-
     private LocalDateTime fechaSolucion;
     private String observaciones;
+    private Long categoriaFallaId;
+    private Long categoriaSolucionId;
+    private String equipo;
+    private String modelo;
+    private String serial;
+    private String placa;
+    private String serialNuevo;
+    private String placaNueva;
+    private Long activoId;
+    private String canalEscalamiento;
+    private String grupoEscalamiento;
+    private String escaladoA;
+
+
 }

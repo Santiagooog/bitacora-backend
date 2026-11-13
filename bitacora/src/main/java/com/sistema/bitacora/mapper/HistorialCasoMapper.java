@@ -19,6 +19,7 @@ public class HistorialCasoMapper {
         }
 
         return HistorialCasoResponse.builder()
+                .casoId(historial.getCasoId())
                 .id(historial.getId())
                 .accion(historial.getAccion())
                 .campoModificado(historial.getCampoModificado())

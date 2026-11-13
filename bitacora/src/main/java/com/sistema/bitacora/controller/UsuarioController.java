@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class UsuarioController {
 
     // Solo un administrador puede listar usuarios
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<List<UsuarioResponse>> listarUsuarios() {
         List<UsuarioResponse> usuarios = usuarioRepository.findAll().stream()
@@ -37,6 +39,8 @@ public class UsuarioController {
                 .correo(usuario.getCorreo())
                 .rol(usuario.getRol().getNombre())
                 .activo(usuario.getActivo())
+                .serviciosPermitidosIds(usuario.getServiciosPermitidos().stream().map(s -> s.getId()).toList())
+                .serviciosPermitidos(usuario.getServiciosPermitidos().stream().map(s -> s.getNombre()).sorted().toList())
                 .build();
     }
 }

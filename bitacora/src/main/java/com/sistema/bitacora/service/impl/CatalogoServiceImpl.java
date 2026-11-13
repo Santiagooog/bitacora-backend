@@ -4,10 +4,13 @@ import com.sistema.bitacora.dto.catalogo.CatalogoResponse;
 import com.sistema.bitacora.dto.catalogo.SedeCompletaResponse;
 import com.sistema.bitacora.entity.Rol;
 import com.sistema.bitacora.entity.Sede;
+import com.sistema.bitacora.entity.Servicio;
 import com.sistema.bitacora.repository.*;
 import com.sistema.bitacora.service.CatalogoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,13 +27,39 @@ public class CatalogoServiceImpl implements CatalogoService {
 
     @Override
     public List<CatalogoResponse> listarServicios() {
-        return servicioRepository.findAll()
+        return servicioRepository.findByActivoTrue()
                 .stream()
                 .map(servicio -> new CatalogoResponse(
                         servicio.getId(),
                         servicio.getNombre()
                 ))
                 .toList();
+    }
+
+    @Override
+    public CatalogoResponse crearServicio(String nombre, String descripcion) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre del servicio es obligatorio.");
+        }
+        String nombreNormalizado = nombre.trim().replaceAll("\\s+", " ");
+        if (nombreNormalizado.length() > 100) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre no puede superar 100 caracteres.");
+        }
+        if (descripcion != null && descripcion.trim().length() > 255) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La descripción no puede superar 255 caracteres.");
+        }
+        if (servicioRepository.findByNombreIgnoreCase(nombreNormalizado).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un servicio con ese nombre.");
+        }
+
+        String descripcionNormalizada = descripcion == null || descripcion.isBlank()
+                ? null : descripcion.trim();
+        Servicio guardado = servicioRepository.save(Servicio.builder()
+                .nombre(nombreNormalizado)
+                .descripcion(descripcionNormalizada)
+                .activo(true)
+                .build());
+        return new CatalogoResponse(guardado.getId(), guardado.getNombre());
     }
 
     @Override

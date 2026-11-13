@@ -18,6 +18,34 @@ public class Caso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 100)
+    private String equipo;
+
+    private String proyecto;
+
+    // En Caso.java
+    @Column(name = "grupo_escalamiento", length = 100)
+    private String grupoEscalamiento;
+
+    @Column(name = "escalado_a", length = 100)
+    private String escaladoA; // Aquí irá Binarity o Enertecol
+
+
+    @Column(length = 100)
+    private String modelo;
+
+    @Column(length = 100)
+    private String serial;
+
+    @Column(length = 100)
+    private String placa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "activo_id")
+    private Activo activo;
+    @Column(name = "canal_escalamiento", length = 50)
+    private String canalEscalamiento;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creado_por_id")
@@ -29,6 +57,9 @@ public class Caso {
 
     @Column(nullable = false)
     private LocalDateTime fechaSolicitud;
+
+    @Column(name = "fecha_vencimiento")
+    private LocalDateTime fechaVencimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "servicio_id", nullable = false)
@@ -77,6 +108,14 @@ public class Caso {
 
     @Column(nullable = false)
     private LocalDateTime fechaActualizacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_falla_id")
+    private CategoriaFalla categoriaFalla;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_solucion_id")
+    private CategoriaSolucion categoriaSolucion;
 
     @PrePersist
     public void prePersist() {

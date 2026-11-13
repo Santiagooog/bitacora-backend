@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "usuarios")
@@ -39,6 +41,13 @@ public class Usuario implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER) // Cambiado a EAGER para cargar el Rol inmediatamente al autenticar
     @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
+
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuario_servicios",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "servicio_id"))
+    private Set<Servicio> serviciosPermitidos = new HashSet<>();
 
     @Builder.Default
     @Column(nullable = false)

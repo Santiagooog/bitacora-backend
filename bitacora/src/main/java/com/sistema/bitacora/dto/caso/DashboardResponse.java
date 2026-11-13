@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -16,4 +17,9 @@ public class DashboardResponse {
     private Map<String, Long> casosPorEstado;
     private Map<String, Long> casosPorServicio;
     private Map<String, Long> casosPorSede;
+    private Map<String, Long> casosPorMes;
+    private long casosActivos;
+    private long casosEscalados;
+    private long ansVencidos;
+    private List<CasoResponse> casosRecientes;
 }

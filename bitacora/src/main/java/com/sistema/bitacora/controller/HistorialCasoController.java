@@ -2,6 +2,7 @@ package com.sistema.bitacora.controller;
 
 import com.sistema.bitacora.dto.historial.HistorialCasoResponse;
 import com.sistema.bitacora.service.HistorialCasoService;
+import com.sistema.bitacora.service.CasoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,11 @@ import java.util.List;
 public class HistorialCasoController {
 
     private final HistorialCasoService historialService;
+    private final CasoService casoService;
 
     @GetMapping("/{id}/historial")
     public ResponseEntity<List<HistorialCasoResponse>> obtenerHistorial(@PathVariable Long id) {
+        casoService.obtenerCasoPorId(id);
         return ResponseEntity.ok(historialService.listarPorCaso(id));
     }
 }

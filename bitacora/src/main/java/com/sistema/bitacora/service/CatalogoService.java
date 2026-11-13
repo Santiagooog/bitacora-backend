@@ -9,6 +9,7 @@ import java.util.List;
 public interface CatalogoService {
 
     List<CatalogoResponse> listarServicios();
+    CatalogoResponse crearServicio(String nombre, String descripcion);
     List<CatalogoResponse> listarTiposServicio();
     List<CatalogoResponse> listarEstados();
     List<SedeCompletaResponse> listarSedes();

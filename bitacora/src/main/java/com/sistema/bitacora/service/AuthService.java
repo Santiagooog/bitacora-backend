@@ -7,11 +7,14 @@ import com.sistema.bitacora.entity.Rol;
 import com.sistema.bitacora.entity.Usuario;
 import com.sistema.bitacora.repository.RolRepository;
 import com.sistema.bitacora.repository.UsuarioRepository;
+import com.sistema.bitacora.repository.ServicioRepository;
+import com.sistema.bitacora.entity.Servicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final ServicioRepository servicioRepository;
 
+    @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -45,6 +50,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (usuarioRepository.findByCorreo(request.getCorreo()).isPresent()) {
             throw new RuntimeException("El correo ya está registrado");
@@ -59,12 +65,24 @@ public class AuthService {
                     .orElseThrow(() -> new RuntimeException("Rol AGENTE no encontrado"));
         }
 
+        var serviciosPermitidos = new java.util.HashSet<Servicio>();
+        if (!"ADMIN".equalsIgnoreCase(rol.getNombre())) {
+            if (request.getServicioIds() == null || request.getServicioIds().isEmpty()) {
+                throw new IllegalArgumentException("Debe seleccionar al menos un proyecto para el usuario");
+            }
+            serviciosPermitidos.addAll(servicioRepository.findAllById(request.getServicioIds()));
+            if (serviciosPermitidos.size() != new java.util.HashSet<>(request.getServicioIds()).size()) {
+                throw new IllegalArgumentException("Uno o más proyectos seleccionados no existen");
+            }
+        }
+
         var usuario = Usuario.builder()
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())  // ← asignar apellido
                 .correo(request.getCorreo())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .rol(rol)
+                .serviciosPermitidos(serviciosPermitidos)
                 .activo(true)
                 .build();
 

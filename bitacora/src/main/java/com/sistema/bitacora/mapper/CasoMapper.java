@@ -29,6 +29,8 @@ public class CasoMapper {
                 .estado(caso.getEstado() != null ? caso.getEstado().getNombre() : null)
                 .sede(caso.getSedePrincipal() != null ? caso.getSedePrincipal().getNombreSede() : null)
                 .sban(caso.getSedePrincipal() != null ? caso.getSedePrincipal().getSban() : null)
+                .proyecto(caso.getProyecto() != null ? caso.getProyecto()
+                        : caso.getActivo() != null ? caso.getActivo().getProyecto() : null)
                 .descripcionFalla(caso.getDescripcionFalla())
 
                 // Agentes
@@ -46,6 +48,24 @@ public class CasoMapper {
                 .actualizadoPorId(caso.getActualizadoPor() != null ? caso.getActualizadoPor().getId() : null)
                 .actualizadoPorNombre(caso.getActualizadoPor() != null ? caso.getActualizadoPor().getNombre() : null)
                 .actualizadoPorApellido(caso.getActualizadoPor() != null ? caso.getActualizadoPor().getApellido() : null)
+                .fechaVencimiento(caso.getFechaVencimiento())
+                .categoriaFallaId(caso.getCategoriaFalla() != null ? caso.getCategoriaFalla().getId() : null)
+                .categoriaFallaNombre(caso.getCategoriaFalla() != null ? caso.getCategoriaFalla().getNombre() : null)
+                .categoriaSolucionId(caso.getCategoriaSolucion() != null ? caso.getCategoriaSolucion().getId() : null)
+                .categoriaSolucionNombre(caso.getCategoriaSolucion() != null ? caso.getCategoriaSolucion().getNombre() : null)
+                .equipo(caso.getEquipo())
+                .modelo(caso.getModelo())
+                .serial(caso.getSerial())
+                .placa(caso.getPlaca())
+                .activoId(caso.getActivo() != null ? caso.getActivo().getId() : null)
+                .activoSerial(caso.getActivo() != null ? caso.getActivo().getSerial() : null)
+                .activoPlaca(caso.getActivo() != null ? caso.getActivo().getPlaca() : null)
+                .activoName(caso.getActivo() != null ? caso.getActivo().getName() : null)
+                .activoDeviceType(caso.getActivo() != null ? caso.getActivo().getDeviceType() : null)
+                .activoTipoServicio(caso.getActivo() != null ? caso.getActivo().getTipoServicio() : null)
+                .canalEscalamiento(caso.getCanalEscalamiento())
+                .grupoEscalamiento(caso.getGrupoEscalamiento())
+                .escaladoA(caso.getEscaladoA())
                 .build();
     }
 }

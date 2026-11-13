@@ -1,8 +1,10 @@
 package com.sistema.bitacora.config;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,13 +29,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        var continuacionExportacionExcel = (org.springframework.security.web.util.matcher.RequestMatcher) request ->
+                request.getDispatcherType() == DispatcherType.ASYNC
+                        && "/api/casos/exportar-excel".equals(request.getServletPath());
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // Solo permite la continuación async del Excel; la petición REQUEST requiere JWT.
+                        .requestMatchers(continuacionExportacionExcel).permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/servicios").hasRole("ADMIN")
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers("/api/categorias/**").authenticated()
+                        .requestMatchers("/api/ans/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/canales-escalamiento").authenticated()
+                        .requestMatchers("/api/canales-escalamiento/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

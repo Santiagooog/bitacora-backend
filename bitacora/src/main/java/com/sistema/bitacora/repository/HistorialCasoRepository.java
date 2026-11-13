@@ -9,4 +9,5 @@ import java.util.List;
 public interface HistorialCasoRepository extends JpaRepository<HistorialCaso, Long> {
     List<HistorialCaso> findByCasoIdOrderByFechaDesc(Long casoId);
     void deleteByCasoId(Long casoId);
+    List<HistorialCaso> findByCasoIdInOrderByFechaDesc(List<Long> casoIds);
 }

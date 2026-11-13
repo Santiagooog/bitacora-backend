@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Local credentials and operational equipment/ANS data
+/src/main/resources/application-local.properties
+/src/main/resources/data/activos_*.csv
+/src/main/resources/data/ans_*.csv

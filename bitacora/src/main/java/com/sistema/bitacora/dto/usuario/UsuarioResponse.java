@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,4 +17,6 @@ public class UsuarioResponse {
     private String correo;
     private String rol;
     private Boolean activo;
+    private List<Long> serviciosPermitidosIds;
+    private List<String> serviciosPermitidos;
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,4 +17,5 @@ public class RegisterRequest {
     private String password;
     private Long sedeId;
     private Long rolId;
+    private List<Long> servicioIds;
 }

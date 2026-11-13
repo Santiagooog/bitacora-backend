@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HistorialCasoResponse {
+    private Long casoId;
     private Long id;
     private Long usuarioId;
     private String nombreUsuario;

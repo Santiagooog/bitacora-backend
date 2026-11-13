@@ -3,6 +3,8 @@ package com.sistema.bitacora.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "sedes")
 @Getter
@@ -44,6 +46,17 @@ public class Sede {
     @Builder.Default
     @Column(nullable = false)
     private Boolean activa = true;   // valor por defecto true
+    @Column(name = "hora_inicio_manana")
+    private LocalTime horaInicioManana;
+
+    @Column(name = "hora_fin_manana")
+    private LocalTime horaFinManana;
+
+    @Column(name = "hora_inicio_tarde")
+    private LocalTime horaInicioTarde;
+
+    @Column(name = "hora_fin_tarde")
+    private LocalTime horaFinTarde;
 
     // No olvides getters y setters (generados por Lombok)
 }
