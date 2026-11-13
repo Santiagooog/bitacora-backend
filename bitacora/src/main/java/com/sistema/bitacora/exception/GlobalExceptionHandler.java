@@ -2,6 +2,7 @@ package com.sistema.bitacora.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,11 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errores.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errores);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<?> handleAuthentication(AuthenticationException ex) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Correo o contraseña incorrectos.");
     }
 
     @ExceptionHandler(Exception.class)

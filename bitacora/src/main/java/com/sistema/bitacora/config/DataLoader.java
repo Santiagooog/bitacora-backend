@@ -27,6 +27,9 @@ public class DataLoader implements CommandLineRunner {
     @Value("${app.initial-admin.password:}")
     private String initialAdminPassword;
 
+    @Value("${BITACORA_ADMIN_RESET_PASSWORD:}")
+    private String adminResetPassword;
+
 
     @Override
     @Transactional
@@ -111,8 +114,14 @@ public class DataLoader implements CommandLineRunner {
         }
 
 
-        // ========== USUARIO ADMIN POR DEFECTO ==========
-        if (usuarioRepository.findByCorreo("admin@bitacora.com").isEmpty() && initialAdminPassword != null && !initialAdminPassword.isBlank()) {
+        // ========== USUARIO ADMIN POR DEFECTO / RESTABLECIMIENTO LOCAL ==========
+        var adminExistente = usuarioRepository.findByCorreo("admin@bitacora.com");
+        if (adminExistente.isPresent() && adminResetPassword != null && !adminResetPassword.isBlank()) {
+            var administrador = adminExistente.get();
+            administrador.setPassword(passwordEncoder.encode(adminResetPassword));
+            usuarioRepository.save(administrador);
+            System.out.println("Contraseña del administrador restablecida desde la configuración local.");
+        } else if (adminExistente.isEmpty() && initialAdminPassword != null && !initialAdminPassword.isBlank()) {
             Rol adminRol = rolRepository.findByNombre("ADMIN")
                     .orElseThrow(() -> new RuntimeException("Rol ADMIN no encontrado"));
 
