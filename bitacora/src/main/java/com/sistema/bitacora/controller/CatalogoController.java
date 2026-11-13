@@ -22,7 +22,7 @@ import org.springframework.security.access.AccessDeniedException;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "${app.cors.allowed-origin:http://localhost:5173}")
 public class CatalogoController {
 
     private final CatalogoService catalogoService;

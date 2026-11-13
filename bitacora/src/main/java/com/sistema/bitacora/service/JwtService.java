@@ -6,6 +6,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Value;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -17,10 +19,16 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    // NOTA: Esta es una clave de firma de ejemplo. En producción,
-    // debes guardarla de forma segura en tus variables de entorno (application.properties)
-    private static final String SECRET_KEY = "3c9a6f8b2d5e1a4c7b8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b";
+    @Value("${app.jwt.secret:}")
+    private String secretKey;
 
+    @PostConstruct
+    public void validarSecreto() {
+        if (secretKey == null || secretKey.isBlank()) {
+            throw new IllegalStateException("Debes configurar JWT_SECRET con una clave Base64 segura de al menos 256 bits.");
+        }
+        Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    }
     // 1. Obtener el username (correo) del token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -73,7 +81,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
